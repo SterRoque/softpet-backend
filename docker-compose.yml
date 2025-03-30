@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  db:
+    image: bitnami/postgresql:latest
+    environment:
+      POSTGRES_DB: softpet-db
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    user: root
+
+volumes:
+  postgres_data:
