@@ -12,3 +12,32 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id            String   @id @default(uuid())
+  first_name    String
+  last_name     String
+  email         String   @unique
+  phone         String
+  password_hash String
+  created_at    DateTime @default(now())
+}
+
+model Owner {
+  id         String   @id @default(uuid())
+  name       String
+  phone      String   @unique
+  pets       Pet[]
+  created_at DateTime @default(now())
+}
+
+model Pet {
+  id            String   @id @default(uuid())
+  name          String
+  race          String
+  species       String
+  birthday_date DateTime
+  owner         Owner?   @relation(fields: [owner_id], references: [id])
+  owner_id      String?
+  created_at    DateTime @default(now())
+}
