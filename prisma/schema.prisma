@@ -13,14 +13,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model Admin {
   id            String   @id @default(uuid())
   first_name    String
   last_name     String
   email         String   @unique
-  phone         String
   password_hash String
   created_at    DateTime @default(now())
+  owners        Owner[]
 }
 
 model Owner {
@@ -29,6 +29,9 @@ model Owner {
   phone      String   @unique
   pets       Pet[]
   created_at DateTime @default(now())
+  user_id    String?
+  admin      Admin?   @relation(fields: [admin_id], references: [id], onDelete: Cascade)
+  admin_id   String?
 }
 
 model Pet {
@@ -37,7 +40,7 @@ model Pet {
   race          String
   species       String
   birthday_date DateTime
-  owner         Owner?   @relation(fields: [owner_id], references: [id])
+  owner         Owner?   @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   owner_id      String?
   created_at    DateTime @default(now())
 }
