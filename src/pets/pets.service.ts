@@ -97,7 +97,7 @@ export class PetsService {
       });
     }
 
-    const owner = await this.prisma.owner.update({
+    await this.prisma.owner.update({
       where: {
         id: pet.owner_id,
       },
@@ -117,7 +117,17 @@ export class PetsService {
         species: updatePetDto.pet_species,
         birthday_date: updatePetDto.pet_birthday_date,
       },
+      include: {
+        owner: {
+          select: {
+            name: true,
+            phone: true,
+          },
+        },
+      },
     });
+
+    return pet;
   }
 
   remove(id: number) {
