@@ -1,26 +1,51 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { SignInDto } from './dto/sign-in.dto';
+import { PrismaService } from 'src/database/prisma.service';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
-  }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+  async signIn(signInDto: SignInDto) {
+    const admin = await this.prisma.admin.findUnique({
+      where: {
+        email: signInDto.email,
+      },
+    });
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+    if (!admin) {
+      return new UnauthorizedException({
+        message: 'Invalid credentials',
+      });
+    }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
+    const isPasswordValid = await bcrypt.compare(
+      signInDto.password,
+      admin.password_hash,
+    );
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+    if (!isPasswordValid) {
+      return new UnauthorizedException({
+        message: 'Invalid credentials',
+      });
+    }
+
+    const payload = {
+      sub: admin.id,
+      first_name: admin.first_name,
+      last_name: admin.last_name,
+      email: admin.email,
+    };
+
+    const access_token = await this.jwtService.signAsync(payload);
+
+    return {
+      access_token: access_token,
+    };
   }
 }
