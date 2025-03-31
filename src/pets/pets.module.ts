@@ -4,6 +4,7 @@ import { PetsController } from './pets.controller';
 import { PrismaService } from 'src/database/prisma.service';
 
 @Module({
+  imports: [],
   controllers: [PetsController],
   providers: [PetsService, PrismaService],
 })

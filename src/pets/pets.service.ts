@@ -1,15 +1,27 @@
 import {
   ConflictException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { CreatePetDto } from './dto/create-pet.dto';
 import { UpdatePetDto } from './dto/update-pet.dto';
 import { PrismaService } from 'src/database/prisma.service';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+
+interface IFindAllPetsRequest {
+  page?: number;
+  limit?: number;
+  search?: string;
+}
 
 @Injectable()
 export class PetsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    private readonly prisma: PrismaService,
+  ) {}
 
   async create(adminId: string, createPetDto: CreatePetDto) {
     let owner = await this.prisma.owner.findFirst({
@@ -58,17 +70,34 @@ export class PetsService {
       },
     });
 
+    await this.cacheManager.del(adminId);
+
     return pet;
   }
 
-  async findAll(adminId: string) {
+  async findAll(
+    adminId: string,
+    { limit = 16, page = 1, search = '' }: IFindAllPetsRequest,
+  ) {
+    const skip = (page - 1) * limit;
+
     const pets = await this.prisma.pet.findMany({
       where: {
+        name: {
+          mode: 'insensitive',
+          contains: search,
+        },
         owner: {
+          name: {
+            mode: 'insensitive',
+            contains: search,
+          },
           admin_id: adminId,
         },
       },
-
+      orderBy: { name: 'asc' },
+      skip,
+      take: limit,
       include: {
         owner: {
           select: {
@@ -78,7 +107,22 @@ export class PetsService {
         },
       },
     });
-    return pets;
+
+    const totalPagesCached = await this.cacheManager.get(adminId);
+
+    if (!totalPagesCached) {
+      const totalPets = await this.prisma.pet.count();
+      const totalPages = Math.ceil(totalPets / limit);
+
+      const FIVE_MINUTES = 5 * 60 * 1000;
+
+      await this.cacheManager.set(adminId, totalPages, FIVE_MINUTES);
+    }
+
+    return {
+      pets,
+      totalPages: totalPagesCached,
+    };
   }
 
   async update(adminId: string, id: string, updatePetDto: UpdatePetDto) {
@@ -151,6 +195,8 @@ export class PetsService {
         id,
       },
     });
+
+    await this.cacheManager.del(adminId);
 
     return pet;
   }

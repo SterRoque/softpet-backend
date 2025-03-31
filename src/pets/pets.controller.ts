@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { PetsService } from './pets.service';
 import { CreatePetDto } from './dto/create-pet.dto';
@@ -23,8 +24,17 @@ export class PetsController {
   }
 
   @Get()
-  findAll(@CurrentAdmin() admin: Admin) {
-    return this.petsService.findAll(admin.id);
+  findAll(
+    @CurrentAdmin() admin: Admin,
+    @Query('search') search: string,
+    @Query('page') page: string,
+    @Query('limit') limit: string,
+  ) {
+    return this.petsService.findAll(admin.id, {
+      page: +page,
+      limit: +limit,
+      search,
+    });
   }
 
   @Patch(':id')
