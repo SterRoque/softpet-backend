@@ -130,7 +130,28 @@ export class PetsService {
     return pet;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} pet`;
+  async remove(adminId: string, id: string) {
+    let pet = await this.prisma.pet.findFirst({
+      where: {
+        id,
+        owner: {
+          admin_id: adminId,
+        },
+      },
+    });
+
+    if (!pet) {
+      return new NotFoundException({
+        message: 'pet not found',
+      });
+    }
+
+    pet = await this.prisma.pet.delete({
+      where: {
+        id,
+      },
+    });
+
+    return pet;
   }
 }

@@ -37,7 +37,7 @@ export class PetsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.petsService.remove(+id);
+  remove(@CurrentAdmin() admin: Admin, @Param('id') id: string) {
+    return this.petsService.remove(admin.id, id);
   }
 }
