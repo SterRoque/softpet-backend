@@ -23,13 +23,8 @@ export class PetsController {
   }
 
   @Get()
-  findAll() {
-    return this.petsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.petsService.findOne(+id);
+  findAll(@CurrentAdmin() admin: Admin) {
+    return this.petsService.findAll(admin.id);
   }
 
   @Patch(':id')

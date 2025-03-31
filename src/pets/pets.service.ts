@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePetDto } from './dto/create-pet.dto';
 import { UpdatePetDto } from './dto/update-pet.dto';
 import { PrismaService } from 'src/database/prisma.service';
@@ -57,12 +61,24 @@ export class PetsService {
     return pet;
   }
 
-  findAll() {
-    return `This action returns all pets`;
-  }
+  async findAll(adminId: string) {
+    const pets = await this.prisma.pet.findMany({
+      where: {
+        owner: {
+          admin_id: adminId,
+        },
+      },
 
-  findOne(id: number) {
-    return `This action returns a #${id} pet`;
+      include: {
+        owner: {
+          select: {
+            name: true,
+            phone: true,
+          },
+        },
+      },
+    });
+    return pets;
   }
 
   update(id: number, updatePetDto: UpdatePetDto) {
