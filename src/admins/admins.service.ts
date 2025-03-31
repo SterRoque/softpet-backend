@@ -15,7 +15,7 @@ export class AdminsService {
   async create(createAdminDto: CreateAdminDto) {
     const adminExists = await this.prisma.admin.findUnique({
       where: {
-        email: createAdminDto.email,
+        email: createAdminDto.email.toLowerCase().trim(),
       },
     });
 
@@ -27,9 +27,9 @@ export class AdminsService {
 
     const admin = await this.prisma.admin.create({
       data: {
-        first_name: createAdminDto.first_name,
-        last_name: createAdminDto.last_name,
-        email: createAdminDto.email,
+        first_name: createAdminDto.first_name.trim(),
+        last_name: createAdminDto.last_name.trim(),
+        email: createAdminDto.email.toLowerCase().trim(),
         password_hash: await bcrypt.hash(createAdminDto.password, 10),
       },
     });
