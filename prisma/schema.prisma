@@ -35,12 +35,17 @@ model Owner {
 }
 
 model Pet {
-  id            String   @id @default(uuid())
+  id            String     @id @default(uuid())
   name          String
-  race          String
-  species       String
+  breed         String
+  species       PetSpecies
   birthday_date DateTime
-  owner         Owner?   @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+  owner         Owner?     @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   owner_id      String?
-  created_at    DateTime @default(now())
+  created_at    DateTime   @default(now())
+}
+
+enum PetSpecies {
+  DOG
+  CAT
 }
