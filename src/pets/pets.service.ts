@@ -81,8 +81,43 @@ export class PetsService {
     return pets;
   }
 
-  update(id: number, updatePetDto: UpdatePetDto) {
-    return `This action updates a #${id} pet`;
+  async update(adminId: string, id: string, updatePetDto: UpdatePetDto) {
+    let pet = await this.prisma.pet.findFirst({
+      where: {
+        id,
+        owner: {
+          admin_id: adminId,
+        },
+      },
+    });
+
+    if (!pet?.owner_id) {
+      return new NotFoundException({
+        message: 'pet not found',
+      });
+    }
+
+    const owner = await this.prisma.owner.update({
+      where: {
+        id: pet.owner_id,
+      },
+      data: {
+        name: updatePetDto.owner_name || undefined,
+        phone: updatePetDto.owner_phone || undefined,
+      },
+    });
+
+    pet = await this.prisma.pet.update({
+      where: {
+        id,
+      },
+      data: {
+        name: updatePetDto.pet_name,
+        breed: updatePetDto.pet_breed,
+        species: updatePetDto.pet_species,
+        birthday_date: updatePetDto.pet_birthday_date,
+      },
+    });
   }
 
   remove(id: number) {
