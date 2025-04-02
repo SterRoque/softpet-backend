@@ -31,8 +31,8 @@ export class PetsController {
     @Query('limit') limit: string,
   ) {
     return this.petsService.findAll(admin.id, {
-      page: +page,
-      limit: +limit,
+      page: isNaN(+page) ? 1 : +page,
+      limit: isNaN(+limit) ? 16 : +limit,
       search,
     });
   }
