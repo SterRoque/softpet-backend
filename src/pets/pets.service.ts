@@ -108,13 +108,15 @@ export class PetsService {
       },
     });
 
-    const totalPagesCached = await this.cacheManager.get(adminId);
+    let totalPagesCached = await this.cacheManager.get(adminId);
 
     if (!totalPagesCached) {
       const totalPets = await this.prisma.pet.count();
       const totalPages = Math.ceil(totalPets / limit);
 
       const FIVE_MINUTES = 5 * 60 * 1000;
+
+      totalPagesCached = totalPages;
 
       await this.cacheManager.set(adminId, totalPages, FIVE_MINUTES);
     }
