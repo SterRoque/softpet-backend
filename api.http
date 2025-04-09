@@ -11,7 +11,7 @@ Content-Type: application/json
 
 ### GET - Buscar Pets
 GET {{baseUrl}}/pets
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMGNmNmM0Yi0yZTRiLTQ0MjgtOTEwZC00ZWEwNGY1YTNkNGMiLCJmaXJzdF9uYW1lIjoiU3RlciIsImxhc3RfbmFtZSI6IlJvcXVlIiwiZW1haWwiOiJzdGVyQGdtYWlsLmNvbSIsImlhdCI6MTc0MzU3NTEyMSwiZXhwIjoxNzQ0MTc5OTIxfQ.MJ1mix2qK58pJ1d8cLD2WkvrmJMS2_P3vUVKLLfhbA0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMGNmNmM0Yi0yZTRiLTQ0MjgtOTEwZC00ZWEwNGY1YTNkNGMiLCJmaXJzdF9uYW1lIjoiU3RlciIsImxhc3RfbmFtZSI6IlJvcXVlIiwiZW1haWwiOiJzdGVyQGdtYWlsLmNvbSIsImlhdCI6MTc0MzY1MTI1NywiZXhwIjoxNzQ0MjU2MDU3fQ.rpT7FH7rZHDqHCH2sd3m1H_gwCIEdfxbbXn8UvzlHRU
 
 
 ### POST - Cadastrar admin
@@ -21,7 +21,7 @@ Content-Type: application/json
 {
     "first_name": "Lucas",
     "last_name": "Silva",
-    "email": "lucas@gmail.com",
+    "email": "lucasgmail.com",
     "password":"Tefe@3333"
 }
 

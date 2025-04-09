@@ -138,7 +138,7 @@ export class PetsService {
     });
 
     if (!pet?.owner_id) {
-      return new NotFoundException({
+      throw new NotFoundException({
         message: 'pet not found',
       });
     }
@@ -187,7 +187,7 @@ export class PetsService {
     });
 
     if (!pet) {
-      return new NotFoundException({
+      throw new NotFoundException({
         message: 'pet not found',
       });
     }
