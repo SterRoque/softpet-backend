@@ -20,7 +20,7 @@ export class AdminsService {
     });
 
     if (adminExists) {
-      return new ConflictException({
+      throw new ConflictException({
         message: 'admin already exists',
       });
     }
@@ -48,7 +48,7 @@ export class AdminsService {
     });
 
     if (!admin) {
-      return new NotFoundException('admin not found');
+      throw new NotFoundException('admin not found');
     }
 
     await this.prisma.admin.delete({
