@@ -1,27 +1,40 @@
 @baseUrl = http://localhost:3001
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTAyMTlhNC1jMmFjLTQ2NDEtOTE1MC0zOTEzYjg3Y2Y3ZGQiLCJmaXJzdF9uYW1lIjoiTHVjYXMiLCJsYXN0X25hbWUiOiJTaWx2YSIsImVtYWlsIjoibHVjYXNAZ21haWwuY29tIiwiaWF0IjoxNzQ0MjMxNzM4LCJleHAiOjE3NDQ4MzY1Mzh9.x8hdR3J5bFuVbwY8NZ5WYTTp2ER1Xiq--e1vo82A10Y
 
 ### POST - Login
 POST {{baseUrl}}/auth
 Content-Type: application/json
 
 {
-  "email": "ster@gmail.com",
-  "password": "Dev123"
+  "email": "lucas@gmail.com",
+  "password": "Tefe@3333"
 }
 
 ### GET - Buscar Pets
 GET {{baseUrl}}/pets
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMGNmNmM0Yi0yZTRiLTQ0MjgtOTEwZC00ZWEwNGY1YTNkNGMiLCJmaXJzdF9uYW1lIjoiU3RlciIsImxhc3RfbmFtZSI6IlJvcXVlIiwiZW1haWwiOiJzdGVyQGdtYWlsLmNvbSIsImlhdCI6MTc0MzY1MTI1NywiZXhwIjoxNzQ0MjU2MDU3fQ.rpT7FH7rZHDqHCH2sd3m1H_gwCIEdfxbbXn8UvzlHRU
+Authorization: {{token}}
 
+### POST - Cadastrar Pet
+POST {{baseUrl}}/pets
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "pet_name": "Thor",
+  "pet_species": "DOG",
+  "pet_breed": "Golden Retriever",
+  "pet_birthday_date": "2023-11-15",
+  "owner_name": "Marcos Silva",
+  "owner_phone": "(77) 9 7877-7777"
+}
 
 ### POST - Cadastrar admin
 POST {{baseUrl}}/admins
 Content-Type: application/json
 
 {
-    "first_name": "Lucas",
-    "last_name": "Silva",
-    "email": "lucasgmail.com",
-    "password":"Tefe@3333"
+  "first_name": "Lucas",
+  "last_name": "Silva",
+  "email": "lucas@gmail.com",
+  "password": "Tefe@3333"
 }
-
