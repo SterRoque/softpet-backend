@@ -72,7 +72,13 @@ export class PetsService {
 
     await this.cacheManager.del(adminId);
 
-    return pet;
+    return {
+      ...pet,
+      owner: {
+        name: owner.name,
+        phone: owner.phone,
+      },
+    };
   }
 
   async findAll(
@@ -95,7 +101,7 @@ export class PetsService {
           admin_id: adminId,
         },
       },
-      orderBy: { name: 'asc' },
+      orderBy: { created_at: 'desc' },
       skip,
       take: limit,
       include: {
@@ -143,7 +149,7 @@ export class PetsService {
       });
     }
 
-    await this.prisma.owner.update({
+    const owner = await this.prisma.owner.update({
       where: {
         id: pet.owner_id,
       },
@@ -161,19 +167,17 @@ export class PetsService {
         name: updatePetDto.pet_name,
         breed: updatePetDto.pet_breed,
         species: updatePetDto.pet_species,
-        birthday_date: updatePetDto.pet_birthday_date,
-      },
-      include: {
-        owner: {
-          select: {
-            name: true,
-            phone: true,
-          },
-        },
+        birthday_date: new Date(updatePetDto.pet_birthday_date!),
       },
     });
 
-    return pet;
+    return {
+      ...pet,
+      owner: {
+        name: owner.name,
+        phone: owner.phone,
+      },
+    };
   }
 
   async remove(adminId: string, id: string) {
