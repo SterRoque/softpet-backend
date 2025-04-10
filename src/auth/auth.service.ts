@@ -19,7 +19,7 @@ export class AuthService {
     });
 
     if (!admin) {
-      return new UnauthorizedException({
+      throw new UnauthorizedException({
         message: 'Invalid credentials',
       });
     }
@@ -30,7 +30,7 @@ export class AuthService {
     );
 
     if (!isPasswordValid) {
-      return new UnauthorizedException({
+      throw new UnauthorizedException({
         message: 'Invalid credentials',
       });
     }
