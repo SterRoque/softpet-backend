@@ -89,17 +89,25 @@ export class PetsService {
 
     const pets = await this.prisma.pet.findMany({
       where: {
-        name: {
-          mode: 'insensitive',
-          contains: search,
-        },
         owner: {
-          name: {
-            mode: 'insensitive',
-            contains: search,
-          },
           admin_id: adminId,
         },
+        OR: [
+          {
+            name: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+          {
+            owner: {
+              name: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+          },
+        ],
       },
       orderBy: { created_at: 'desc' },
       skip,
